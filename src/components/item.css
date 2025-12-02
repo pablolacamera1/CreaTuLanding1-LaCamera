@@ -1,0 +1,30 @@
+.item-card {
+  background: #1f1f1f;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin: 1rem 0;
+  border: 1px solid #333;
+  transition: 0.3s ease;
+  width: 260px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.item-card:hover {
+  transform: scale(1.03);
+  border-color: #ffcc00;
+  box-shadow: 0 0 12px #ffcc00;
+}
+
+.item-card h3 {
+  margin: 0;
+  color: #ffcc00;
+}
+
+.item-card p {
+  color: #ccc;
+}
+
+.item-card a {
+  color: #e63946;
+  font-weight: bold;
+}

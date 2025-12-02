@@ -1,0 +1,17 @@
+.item-detail {
+  background: #1f1f1f;
+  padding: 2rem;
+  border-radius: 12px;
+  margin: 2rem auto;
+  max-width: 500px;
+  border: 1px solid #333;
+}
+
+.item-detail h2 {
+  color: #ffcc00;
+  margin-bottom: 1rem;
+}
+
+.item-detail p {
+  font-size: 1.2rem;
+}
