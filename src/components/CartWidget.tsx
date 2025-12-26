@@ -1,10 +1,15 @@
+import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 function CartWidget() {
+  const { getTotalQuantity } = useCart();
+  const total = getTotalQuantity();
+
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-      <span role="img" aria-label="cart">🛒</span>
-      <span>3</span>
-    </div>
+    <Link to="/cart" className="cart-widget">
+      <span className="cart-icon">🛒</span>
+      {total > 0 && <span className="cart-badge">{total}</span>}
+    </Link>
   );
 }
 

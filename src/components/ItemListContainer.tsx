@@ -1,26 +1,23 @@
 import { useEffect, useState } from "react";
 import { getProducts } from "../data/products";
+import { Product } from "../data/products";
 import ItemList from "./ItemList";
 
-interface Props {
-  greeting: string;
-}
-
-function ItemListContainer({ greeting }: Props) {
-  const [items, setItems] = useState<any[]>([]);
+function ItemListContainer() {
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    getProducts().then((resp: any) => {
-      setItems(resp);
-    });
+    getProducts().then(res => setProducts(res));
   }, []);
 
   return (
     <div>
-      <h2>{greeting}</h2>
-      <ItemList items={items} />
+      <h2>Catálogo</h2>
+      <ItemList products={products} />
     </div>
   );
 }
 
 export default ItemListContainer;
+
+

@@ -1,26 +1,37 @@
 import { Link } from "react-router-dom";
-
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-}
+import { Product } from "../data/products";
+import "./item.css";
 
 interface ItemProps {
-  item: Product;
+  product: Product;
 }
 
-
-function Item({ item }: ItemProps) {
+function Item({ product }: ItemProps) {
   return (
     <div className="item-card">
-      <h3>{item.name}</h3>
-      <p>Precio: ${item.price}</p>
-      <Link to={`/item/${item.id}`}>Ver detalle</Link>
+      <div style={{ 
+        width: '100%', 
+        aspectRatio: '1/1', 
+        backgroundColor: '#333', 
+        borderRadius: '8px',
+        marginBottom: '15px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#555',
+        fontSize: '0.8rem'
+      }}>
+        SIN IMAGEN
+      </div>
+      
+      <h3>{product.artist} - {product.title}</h3>
+      <p className="price">${product.price}</p>
+
+      <Link to={`/item/${product.id}`} className="ver-detalle-btn">
+        Ver detalle
+      </Link>
     </div>
   );
 }
 
 export default Item;
-import "./Item.css";
