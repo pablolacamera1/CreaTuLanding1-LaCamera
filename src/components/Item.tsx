@@ -9,22 +9,22 @@ interface ItemProps {
 function Item({ product }: ItemProps) {
   return (
     <div className="item-card">
-      <div style={{ 
-        width: '100%', 
-        aspectRatio: '1/1', 
-        backgroundColor: '#333', 
-        borderRadius: '8px',
-        marginBottom: '15px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#555',
-        fontSize: '0.8rem'
-      }}>
-        SIN IMAGEN
-      </div>
-      
-      <h3>{product.artist} - {product.title}</h3>
+      <img
+        src={product.img}
+        alt={product.title}
+        style={{
+          width: "100%",
+          height: "200px",
+          objectFit: "cover",
+          borderRadius: "8px",
+          marginBottom: "15px",
+        }}
+      />
+
+      <h3>
+        {product.artist} – {product.title}
+      </h3>
+
       <p className="price">${product.price}</p>
 
       <Link to={`/item/${product.id}`} className="ver-detalle-btn">

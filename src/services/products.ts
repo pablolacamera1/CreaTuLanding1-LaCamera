@@ -1,36 +1,45 @@
-import { collection, getDocs, query, where, doc, getDoc } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { Product } from "../data/products";
 
-const productsCollection = collection(db, "products");
-
 export const getProducts = async (): Promise<Product[]> => {
-  const snapshot = await getDocs(productsCollection);
+  try {
+    const productosRef = collection(db, "discos");
+    const snapshot = await getDocs(productosRef);
 
-  return snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...(doc.data() as Omit<Product, "id">)
-  }));
+    console.log(
+      "Firestore snapshot:",
+      snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    );
+
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Product[];
+  } catch (error) {
+    console.error("Error trayendo productos:", error);
+    return [];
+  }
 };
 
-export const getProductsByCategory = async (categoryId: string): Promise<Product[]> => {
-  const q = query(productsCollection, where("category", "==", categoryId));
-  const snapshot = await getDocs(q);
+export const getProductById = async (
+  id: string
+): Promise<Product | null> => {
+  try {
+    const docRef = doc(db, "discos", id);
+    const snapshot = await getDoc(docRef);
 
-  return snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...(doc.data() as Omit<Product, "id">)
-  }));
-};
+    if (!snapshot.exists()) {
+      console.warn("Producto no encontrado:", id);
+      return null;
+    }
 
-export const getProductById = async (id: string): Promise<Product | null> => {
-  const ref = doc(db, "products", id);
-  const snapshot = await getDoc(ref);
-
-  if (!snapshot.exists()) return null;
-
-  return {
-    id: snapshot.id,
-    ...(snapshot.data() as Omit<Product, "id">)
-  };
+    return {
+      id: snapshot.id,
+      ...snapshot.data(),
+    } as Product;
+  } catch (error) {
+    console.error("Error trayendo producto:", error);
+    return null;
+  }
 };

@@ -1,16 +1,16 @@
 import { Product } from "../data/products";
 import ItemCount from "./ItemCount";
-import { useCart } from "../context/CartContext"; // Importante: traer el contexto
+import { useCart } from "../context/CartContext"; 
 
 interface ItemDetailProps {
   product: Product;
 }
 
 function ItemDetail({ product }: ItemDetailProps) {
-  const { addItem } = useCart(); // Extraemos la función para agregar
+  const { addItem } = useCart(); 
 
   const onAdd = (quantity: number) => {
-    // Esta es la función que realmente guarda en el carrito
+    
     addItem(product, quantity); 
     console.log("Producto agregado:", product.title, "Cantidad:", quantity);
   };
@@ -24,7 +24,6 @@ function ItemDetail({ product }: ItemDetailProps) {
           <span className="price">${product.price}</span>
           
           <div className="controls-wrapper">
-             {/* Pasamos la función onAdd al hijo */}
              <ItemCount product={product} onAdd={onAdd} />
           </div>
         </div>

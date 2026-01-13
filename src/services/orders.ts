@@ -1,21 +1,29 @@
-import { addDoc, collection, Timestamp } from "firebase/firestore";
+import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
-import { CartItem } from "../context/CartContext";
 
-const ordersCollection = collection(db, "orders");
 
-export const createOrder = async (
-  buyer: { name: string; phone: string; email: string },
-  items: CartItem[],
-  total: number
-) => {
-  const order = {
-    buyer,
-    items,
-    total,
-    date: Timestamp.fromDate(new Date()),
-  };
+export interface OrderItem {
+  id: string;
+  title: string;
+  price: number;
+  quantity: number;
+}
 
-  const docRef = await addDoc(ordersCollection, order);
+export interface Buyer {
+  name: string;
+  phone: string;
+  email: string;
+}
+
+export interface Order {
+  buyer: Buyer;
+  items: OrderItem[];
+  total: number;
+  date: Timestamp;
+}
+
+export const createOrder = async (order: Order) => {
+  const ordersRef = collection(db, "orders");
+  const docRef = await addDoc(ordersRef, order);
   return docRef.id;
 };

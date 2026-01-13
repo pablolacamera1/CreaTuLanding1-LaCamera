@@ -1,85 +1,61 @@
 import { useState } from "react";
+import { Timestamp } from "firebase/firestore";
 import { useCart } from "../context/CartContext";
+import { createOrder } from "../services/orders";
 
 function CheckoutForm() {
   const { cart, getTotalPrice, clearCart } = useCart();
-
-  const [buyer, setBuyer] = useState({
-    name: "",
-    phone: "",
-    email: "",
-  });
-
   const [orderId, setOrderId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBuyer({
-      ...buyer,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
-    // Simulación de orden (Firebase viene después)
-    const fakeOrderId = Math.random().toString(36).substring(2, 10);
+    const formData = new FormData(e.currentTarget);
 
-    setOrderId(fakeOrderId);
+    const order = {
+      buyer: {
+        name: formData.get("name") as string,
+        phone: formData.get("phone") as string,
+        email: formData.get("email") as string,
+      },
+      items: cart.map(item => ({
+        id: item.id,
+        title: item.title,
+        price: item.price,
+        quantity: item.quantity,
+      })),
+      total: getTotalPrice(),
+      date: Timestamp.fromDate(new Date()),
+    };
+
+    const id = await createOrder(order);
+    setOrderId(id);
     clearCart();
+    setLoading(false);
   };
 
   if (orderId) {
     return (
       <div>
-        <h2>¡Gracias por tu compra!</h2>
-        <p>Tu número de orden es:</p>
-        <strong>{orderId}</strong>
+        <h3>¡Gracias por tu compra!</h3>
+        <p>
+          Tu número de orden es: <strong>{orderId}</strong>
+        </p>
       </div>
     );
   }
 
-  if (cart.length === 0) {
-    return <h2>El carrito está vacío</h2>;
-  }
-
   return (
-    <div>
-      <h2>Checkout</h2>
-
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Nombre"
-          value={buyer.name}
-          onChange={handleChange}
-          required
-        />
-
-        <input
-          type="tel"
-          name="phone"
-          placeholder="Teléfono"
-          value={buyer.phone}
-          onChange={handleChange}
-          required
-        />
-
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={buyer.email}
-          onChange={handleChange}
-          required
-        />
-
-        <button type="submit">
-          Confirmar compra (${getTotalPrice()})
-        </button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <input name="name" placeholder="Nombre" required />
+      <input name="phone" placeholder="Teléfono" required />
+      <input name="email" placeholder="Email" required />
+      <button type="submit" disabled={loading || cart.length === 0}>
+        {loading ? "Procesando..." : "Finalizar compra"}
+      </button>
+    </form>
   );
 }
 

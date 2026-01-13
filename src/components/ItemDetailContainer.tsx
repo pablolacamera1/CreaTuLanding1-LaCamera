@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ItemDetail from "./ItemDetail";
-import { getProductById } from "../data/products";
+import { getProductById } from "../services/products";
 import { Product } from "../data/products";
 
 function ItemDetailContainer() {
@@ -12,7 +12,7 @@ function ItemDetailContainer() {
   useEffect(() => {
     if (id) {
       getProductById(id).then((res) => {
-        setProduct(res || null);
+        setProduct(res);
         setLoading(false);
       });
     }
@@ -25,3 +25,4 @@ function ItemDetailContainer() {
 }
 
 export default ItemDetailContainer;
+
